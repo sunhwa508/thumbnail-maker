@@ -33,7 +33,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/styled-components/Thumbnail.js"  ],
   "exclude": [
     "node_modules"
   ]
