@@ -1,6 +1,6 @@
 <template>
+  <h1>Thumbnail maker</h1>
   <div class="wrapper">
-    <h1>Thumbnail maker</h1>
     <div :style="style" class="main">
       <h1 :style="fontStyle" class="title">
         {{ title }}
@@ -11,6 +11,7 @@
     </div>
     <div class="menu">
       <div class="options">
+        <span>폰트 설정</span>
         <select v-model="selected">
           <option disabled value="">font를 선택하세요</option>
           <option
@@ -21,6 +22,7 @@
             {{ option }}
           </option>
         </select>
+        <br />
         <input v-model="title" placeholder="제목을 입력하세요" />
         <input v-model="desc" placeholder="설명을 입력하세요" />
         <div class="option-box">
@@ -185,6 +187,9 @@ export default defineComponent({
 </script>
 <style scss>
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: "Do Hyeon", "serif";
 }
 .menu {
@@ -195,6 +200,12 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 5px;
 }
+.options select {
+  margin: 20px;
+  border: 1px solid #eaeaea;
+  padding: 5px;
+  border-radius: 5px;
+}
 body {
   background-image: url("https://i.pinimg.com/originals/3d/fc/45/3dfc454828df3b405411464c97bb98ec.png");
   background-repeat: no-repeat;
@@ -202,14 +213,14 @@ body {
   background-size: 100% 100%;
 }
 .checkbox {
-  width: 100px;
   text-align: center;
   font-size: 20px;
+  margin: 20px;
 }
 .option-box {
   font-size: 20px;
-  width: 100px;
   text-align: center;
+  margin: 20px;
 }
 select {
   font-size: 1rem;
