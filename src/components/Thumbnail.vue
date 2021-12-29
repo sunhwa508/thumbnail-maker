@@ -9,13 +9,13 @@
       >
         {{ title }}
       </h1>
-      <font
+      <span
         v-show="picked === 'desc' || picked === 'both'"
         :style="fontStyle"
         class="desc"
       >
         {{ desc }}
-      </font>
+      </span>
     </div>
     <div>
       <input
@@ -36,17 +36,18 @@
       <form>
         <input
           type="checkbox"
-          id="fontSize"
-          value="fontSize"
-          v-model="FontSize"
-          @change="onChangeFont"
+          id="baseFontSize"
+          value="baseFontSize"
+          v-model="baseFontSize"
+          @click="onChangeFont(baseFontSize)"
         />
-        <label for="fontSize">글자크게</label>
+        <label for="baseFontSize">글자크게</label>
         <input
           type="checkbox"
           id="reversedColor"
           value="reversedColor"
           v-model="ReversedColor"
+          @click="onChangeReversedColor(ReversedColor)"
         />
         <label for="reversedColor">색상 반전</label>
       </form>
@@ -68,7 +69,6 @@
       :sucker-canvas="suckerCanvas"
       :sucker-area="suckerArea"
       @changeColor="changeColor"
-      @openSucker="openSucker"
     />
   </div>
 </template>
@@ -89,8 +89,9 @@ declare interface BaseComponent {
   suckerArea: [];
   isSucking: boolean;
   picked: string;
-  fontSize: boolean;
+  baseFontSize: boolean;
   reversedColor: boolean;
+  hasShadow: boolean;
 }
 
 export default defineComponent({
@@ -101,35 +102,48 @@ export default defineComponent({
   data(): BaseComponent {
     return {
       backgroundUrl: "",
-      title: " ",
-      desc: " ",
+      title: "",
+      desc: "",
       fontStyles: ["Do Hyeon", "Hahmlet", "Noto Sans KR", "Song Myung"],
       selected: "Do Hyeon",
       color: "#59c7f9",
       suckerCanvas: null,
       suckerArea: [],
       isSucking: false,
-      picked: "title",
-      fontSize: false,
+      picked: "both",
+      baseFontSize: false,
       reversedColor: false,
+      hasShadow: false,
     };
   },
   computed: {
-    cssVars(): { "--font-size": string } {
-      return {
-        "--font-size": this.fontSize ? "2rem" : "1rem",
-      };
-    },
     style(): string {
       return this.backgroundUrl === null
         ? `background-color: ${this.color}`
         : `background-image: url(${this.backgroundUrl})`;
     },
-    fontStyle(): string {
-      return `font-family: ${this.selected}, serif`;
+    fontStyle(): {
+      fontFamily: string;
+      fontSize: string;
+      color: string;
+      textShadow: string | null;
+    } {
+      return {
+        fontFamily: `${this.selected}, serif`,
+        fontSize: this.baseFontSize ? "4rem" : "2.5rem",
+        color: this.reversedColor ? "#fff" : "#000",
+        textShadow: this.hasShadow ? `2px 4px 3px rgba(0,0,0,0.3)` : null,
+      };
     },
   },
   methods: {
+    onChangeFont() {
+      this.baseFontSize = !this.baseFontSize;
+      console.log(this.baseFontSize);
+    },
+    onChangeReversedColor() {
+      this.reversedColor = !this.reversedColor;
+    },
     changeColor(color: {
       rgba: { r: number; g: number; b: number; a: number };
     }) {
@@ -137,19 +151,9 @@ export default defineComponent({
       this.color = `rgba(${r}, ${g}, ${b}, ${a})`;
       this.backgroundUrl = null;
     },
-
-    openSucker(isOpen: boolean) {
-      if (isOpen) {
-        // this.suckerCanvas = canvas;
-        // this.suckerArea = [x1, y1, x2, y2];
-      } else {
-        // this.suckerCanvas && this.suckerCanvas.remove
-      }
-    },
   },
 });
 </script>
-
 <style scss>
 .wrapper {
   display: flex;
@@ -170,8 +174,5 @@ export default defineComponent({
 .title {
   z-index: 100000;
   color: #000;
-}
-.desc {
-  font-size: var(--font-size);
 }
 </style>
