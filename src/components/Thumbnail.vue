@@ -189,7 +189,6 @@ export default defineComponent({
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: "Do Hyeon", "serif";
 }
 .menu {
