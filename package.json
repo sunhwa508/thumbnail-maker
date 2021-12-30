@@ -2,6 +2,7 @@
   "name": "thumbnailator",
   "version": "0.1.0",
   "private": true,
+
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,6 +11,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "express": "^4.17.2",
+    "path": "^0.12.7",
     "vue": "^3.0.0",
     "vue-color-kit": "^1.0.5",
     "vue3-styled-components": "^1.2.1"

@@ -79,10 +79,13 @@
   </div>
 </template>
 
+<style>
+@import url("../../node_modules/vue-color-kit/dist/vue-color-kit.css");
+</style>
+
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ColorPicker } from "vue-color-kit";
-import "vue-color-kit/dist/vue-color-kit.css";
 
 declare interface BaseComponent {
   backgroundUrl: string | null;
