@@ -1,15 +1,15 @@
 <template>
-  <Thumbnail />
+  <Controller />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Thumbnail from "./components/Thumbnail.vue";
+import Controller from "./components/Controller.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    Thumbnail,
+    Controller,
   },
 });
 </script>
