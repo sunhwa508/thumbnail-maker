@@ -84,109 +84,128 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 import { ColorPicker } from "vue-color-kit";
+import { ref, reactive, ComputedRef, Ref, computed } from "vue";
 
 declare interface BaseComponent {
-  backgroundUrl: string | null;
-  title: string;
-  desc: string;
-  fontStyles: Array<string>;
-  selected: string;
-  color: string;
-  suckerCanvas: null;
-  suckerArea: [];
-  isSucking: boolean;
-  picked: string;
-  baseFontSize: boolean;
-  reversedColor: boolean;
-  hasShadow: boolean;
+  backgroundUrl?: Ref<string | null>;
+  title?: Ref<string>;
+  desc?: Ref<string>;
+  fontStyles?: string[];
+  selected?: Ref<string>;
+  color?: Ref<string>;
+  suckerCanvas?: Ref<null>;
+  isSucking?: Ref<boolean>;
+  picked?: Ref<string>;
+  baseFontSize?: Ref<boolean>;
+  reversedColor?: Ref<boolean>;
+  hasShadow?: Ref<boolean>;
+  onChangeFont: () => void;
+  onChangeFontShadow: () => void;
+  onChangeReversedColor: () => void;
+  changeColor: (pickedColor: {
+    rgba: { r: number; g: number; b: number; a: number };
+  }) => void;
+  style: ComputedRef<string>;
+  fontStyle: ComputedRef<{
+    fontFamily: string;
+    fontSize: string;
+    color: string;
+    textShadow: string | null;
+    opacity: number;
+  }>;
+  descfontStyle: ComputedRef<{
+    fontFamily: string;
+    fontSize: string;
+    color: string;
+    textShadow: string | null;
+    opacity: number;
+  }>;
+  spanStyle: ComputedRef<{ color: string; backgroundColor: string }>;
 }
 
-export default defineComponent({
-  name: "Thumbnail",
+export default {
+  // name: "Thumbnail",
   components: {
     ColorPicker,
   },
-  data(): BaseComponent {
+  setup(): BaseComponent {
+    let backgroundUrl = ref(null);
+    let title = ref("");
+    let desc = ref("");
+    let fontStyles = reactive([
+      "Do Hyeon",
+      "Hahmlet",
+      "Noto Sans KR",
+      "Song Myung",
+    ]);
+    let selected = ref("Do Hyeon");
+    let color = ref("#59c7f9");
+    let picked = ref("both");
+    let baseFontSize = ref(false);
+    let reversedColor = ref(false);
+    let hasShadow = ref(false);
+    const onChangeFont = () => {
+      baseFontSize.value = !baseFontSize.value;
+    };
+    const onChangeFontShadow = () => {
+      hasShadow.value = !hasShadow.value;
+    };
+    const onChangeReversedColor = () => {
+      reversedColor.value = !reversedColor.value;
+    };
+    const changeColor = (pickedColor: {
+      rgba: { r: number; g: number; b: number; a: number };
+    }) => {
+      const { r, g, b, a } = pickedColor.rgba;
+      color.value = `rgba(${r}, ${g}, ${b}, ${a})`;
+      backgroundUrl.value = null;
+    };
+
+    const style = computed(() => {
+      return backgroundUrl.value === null
+        ? `background-color: ${color.value}`
+        : `background-image: url(${backgroundUrl.value})`;
+    });
+    const fontStyle = computed(() => {
+      return {
+        fontFamily: `${selected.value}, serif`,
+        fontSize: baseFontSize.value ? "4rem" : "2.5rem",
+        color: reversedColor.value ? "#fff" : "#000",
+        textShadow: hasShadow.value ? `2px 4px 3px rgba(0,0,0,0.3)` : null,
+        opacity: picked.value === "title" || picked.value === "both" ? 1 : 0,
+      };
+    });
+    const spanStyle = computed(() => {
+      return { backgroundColor: "#333", color: "#ddd" };
+    });
+    const descfontStyle = computed(() => {
+      return {
+        fontFamily: `${selected.value}, serif`,
+        fontSize: baseFontSize.value ? "2rem" : "1.2rem",
+        color: reversedColor.value ? "#fff" : "#000",
+        textShadow: hasShadow.value ? `2px 4px 3px rgba(0,0,0,0.3)` : null,
+        opacity: picked.value === "desc" || picked.value === "both" ? 1 : 0,
+      };
+    });
+
     return {
-      backgroundUrl: "",
-      title: "",
-      desc: "",
-      fontStyles: ["Do Hyeon", "Hahmlet", "Noto Sans KR", "Song Myung"],
-      selected: "Do Hyeon",
-      color: "#59c7f9",
-      suckerCanvas: null,
-      suckerArea: [],
-      isSucking: false,
-      picked: "both",
-      baseFontSize: false,
-      reversedColor: false,
-      hasShadow: false,
+      desc,
+      title,
+      picked,
+      style,
+      spanStyle,
+      selected,
+      fontStyles,
+      fontStyle,
+      descfontStyle,
+      onChangeFont,
+      onChangeFontShadow,
+      onChangeReversedColor,
+      changeColor,
     };
   },
-  computed: {
-    style(): string {
-      return this.backgroundUrl === null
-        ? `background-color: ${this.color}`
-        : `background-image: url(${this.backgroundUrl})`;
-    },
-    fontStyle(): {
-      fontFamily: string;
-      fontSize: string;
-      color: string;
-      textShadow: string | null;
-      opacity: number;
-    } {
-      return {
-        fontFamily: `${this.selected}, serif`,
-        fontSize: this.baseFontSize ? "4rem" : "2.5rem",
-        color: this.reversedColor ? "#fff" : "#000",
-        textShadow: this.hasShadow ? `2px 4px 3px rgba(0,0,0,0.3)` : null,
-        opacity: this.picked === "title" || this.picked === "both" ? 1 : 0,
-      };
-    },
-    spanStyle(): {
-      color: string;
-      backgroundColor: string;
-    } {
-      return { backgroundColor: "#333", color: "#ddd" };
-    },
-    descfontStyle(): {
-      fontFamily: string;
-      fontSize: string;
-      color: string;
-      textShadow: string | null;
-      opacity: number;
-    } {
-      return {
-        fontFamily: `${this.selected}, serif`,
-        fontSize: this.baseFontSize ? "2rem" : "1.2rem",
-        color: this.reversedColor ? "#fff" : "#000",
-        textShadow: this.hasShadow ? `2px 4px 3px rgba(0,0,0,0.3)` : null,
-        opacity: this.picked === "desc" || this.picked === "both" ? 1 : 0,
-      };
-    },
-  },
-  methods: {
-    onChangeFont() {
-      this.baseFontSize = !this.baseFontSize;
-    },
-    onChangeFontShadow() {
-      this.hasShadow = !this.hasShadow;
-    },
-    onChangeReversedColor() {
-      this.reversedColor = !this.reversedColor;
-    },
-    changeColor(color: {
-      rgba: { r: number; g: number; b: number; a: number };
-    }) {
-      const { r, g, b, a } = color.rgba;
-      this.color = `rgba(${r}, ${g}, ${b}, ${a})`;
-      this.backgroundUrl = null;
-    },
-  },
-});
+};
 </script>
 <style scss>
 * {
