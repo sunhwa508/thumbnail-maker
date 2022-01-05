@@ -4,19 +4,10 @@
     <Thumbnail
       :title="title"
       :desc="desc"
-      :style="style"
+      :divStyle="style"
       :fontStyle="fontStyle"
       :descfontStyle="descfontStyle"
-      :spanStyle="spanStyle"
     />
-    <!-- <div :style="style" class="main">
-      <h1 :style="fontStyle" class="title">
-        {{ title }}
-      </h1>
-      <span :style="descfontStyle" class="desc">
-        {{ desc }}
-      </span>
-    </div> -->
     <div class="menu">
       <div class="options">
         <span>폰트 설정</span>
@@ -130,7 +121,6 @@ declare interface BaseComponent {
     textShadow: string | null;
     opacity: number;
   }>;
-  spanStyle: ComputedRef<{ color: string; backgroundColor: string }>;
 }
 
 export default {
@@ -185,9 +175,7 @@ export default {
         opacity: picked.value === "title" || picked.value === "both" ? 1 : 0,
       };
     });
-    const spanStyle = computed(() => {
-      return { backgroundColor: "#333", color: "#ddd" };
-    });
+
     const descfontStyle = computed(() => {
       return {
         fontFamily: `${selected.value}, serif`,
@@ -203,7 +191,6 @@ export default {
       title,
       picked,
       style,
-      spanStyle,
       selected,
       fontStyles,
       fontStyle,
@@ -266,20 +253,5 @@ input {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-.main {
-  background-color: #fff;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-direction: column;
-  width: 768px;
-  height: 402px;
-  border: 2px solid #fff;
-  background-size: cover;
-}
-.title {
-  z-index: 100000;
-  color: #000;
 }
 </style>
